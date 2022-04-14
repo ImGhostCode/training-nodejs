@@ -3,7 +3,7 @@ const {generateAccessToken, generateRefreshToken} = require('../utils/generateTo
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 const {validationResult} = require('express-validator')
-
+const bcrypt = require('bcryptjs')
 
 const loginPage = (req, res) => {
     res.render('Login')
@@ -58,12 +58,14 @@ const login = asyncHandler( async (req, res) =>{
         const id = account._id
         const AccessToken = generateAccessToken(account._id)
         const RefreshToken = generateRefreshToken(account._id)
-        //req.setHeader('Authorization', AccessToken)
+        let token = `Bearer ${AccessToken}`
+        res.setHeader('Authorization', token)
         res.cookie('accessToken', AccessToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*100})
         res.cookie('refreshToken', RefreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*100})
         //res.status(200).json(account._doc)
         res.redirect('/')
     } catch (error) {
+        console.log(error)
         res.status(401)
         throw new Error('Invalid username or password')
     }

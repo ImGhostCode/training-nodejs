@@ -53,3 +53,12 @@ Content-Type: application/json
 {
     "username": "test2"
 }
+
+###
+GET http://localhost:5500/secret
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTQyZWYwOWY3YTMwNDYwMzM2ZWU4MSIsImlhdCI6MTY0OTkzMDgxOSwiZXhwIjoxNjQ5OTMxMDE5fQ.O1_Pi4QirlPqyUmU2zJ20bd81zCa8uoAD6eUPjzo2e4
+
+
+###
+GET http://localhost:5500/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyNTQyZWYwOWY3YTMwNDYwMzM2ZWU4MSIsImlhdCI6MTY0OTkzMTgxOSwiZXhwIjoxNjQ5OTMyMDE5fQ.QlWvBMNOHcmgPDTbEr68n9_S-reAu65CmKDrlzbdO6g
