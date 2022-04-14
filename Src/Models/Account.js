@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcryptjs = require('bcryptjs')
 
 const accountSchema = new mongoose.Schema({
     username: {
@@ -27,6 +28,17 @@ const accountSchema = new mongoose.Schema({
 accountSchema.post('save', (doc, next) => {
     console.log('New account was created ', doc )
     next()
+})
+
+accountSchema.pre('save', async function(next){
+    try {
+        const salt = await bcryptjs.genSalt(10)
+        const hashed = await bcryptjs.hash(this.password,salt)
+        this.password = hashed
+        next()
+    } catch (error) {
+        next(error)
+    }
 })
 
 const AccountModel = mongoose.model('Accounts', accountSchema)

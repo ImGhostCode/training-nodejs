@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt')
 const AccountModel = require('../Models/Account')
 const {generateAccessToken, generateRefreshToken} = require('../utils/generateToken')
 const jwt = require('jsonwebtoken')
@@ -28,12 +27,11 @@ const register = asyncHandler( async (req, res) => {
         throw new Error('Account already exists')
     }
     try {
-        const salt = await bcrypt.genSalt(10)
-        const hashed = await bcrypt.hash(password,salt)
+        
         const newAccount = new AccountModel({
-            username: username,
-            password: hashed,
-            email: email
+            username,
+            password,
+            email
         })
         const result = await newAccount.save()
         res.redirect('/auth/login')
@@ -60,6 +58,7 @@ const login = asyncHandler( async (req, res) =>{
         const id = account._id
         const AccessToken = generateAccessToken(account._id)
         const RefreshToken = generateRefreshToken(account._id)
+        //req.setHeader('Authorization', AccessToken)
         res.cookie('accessToken', AccessToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*100})
         res.cookie('refreshToken', RefreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge: 24*60*60*100})
         //res.status(200).json(account._doc)
