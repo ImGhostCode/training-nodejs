@@ -10,7 +10,10 @@ const PostRouter = require('./Routes/Post')
 const HomeRouter = require('./Routes/Home')
 const {notFound, errorHandler} = require('./Middleware/errorHandler')
 const cors = require('cors')
-const logger = require('morgan')
+const morgan = require('morgan')
+const mongoose = require('mongoose')
+const fs = require('fs')
+//const client = require('./Config/connectRedis')
 
 
 
@@ -26,9 +29,33 @@ app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use(methodOverride('_method'))
 app.use(cookieParser())
+app.use(morgan('common', {
+    stream: fs.createWriteStream(path.join(__dirname, 'logs/access.log'), { flags: 'a' })
+  }))
 
 //connect database
 db.connect()
+mongoose.connection.on('connected', () => {
+    console.log('Connect to database success!')
+})
+mongoose.connection.on('error', (error) => {
+    console.log(error.message)
+})
+mongoose.connection.on('disconnected', () => {
+    console.log('Disconnected to database!')
+})
+
+process.on('SIGINT', async () => {
+    await mongoose.connection.close()
+    process.exit(0)
+})
+
+//connect redis
+//client.set('foo', 'ghost')
+// client.connect();
+// client.PING((err, ping) => {
+//     console.log(ping)
+// })
 
 //set view
 app.set("view engine", "ejs")

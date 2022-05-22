@@ -6,7 +6,10 @@ const {validationResult} = require('express-validator')
 const bcrypt = require('bcryptjs')
 
 const loginPage = (req, res) => {
+
     res.render('Login')
+    //res.json(req)
+    //console.log(req)
 }
 
 const registerPage = (req, res) => {
